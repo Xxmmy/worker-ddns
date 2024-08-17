@@ -1,11 +1,4 @@
 #!/usr/bin/env python3
-"""
-Simple agent script that collects the public IP address of the machine it is
-running on and then updates a Cloudflare Worker.
-
-All requests are signed using a pre-shared key to ensure the integrity of the
-message and authenticate the source.
-"""
 import os
 import sys
 import hmac
@@ -39,7 +32,7 @@ def sign_message(message: bytes, key: bytes) -> str:
 
 def update_dns_record(url: str, key: str):
 	timestamp = time.time()
-	payload = json.dumps({"addr": "127.0.0.1", "timestamp": timestamp}).encode("utf8")
+	payload = json.dumps({"timestamp": timestamp}).encode("utf8")
 	signature = sign_message(payload, key.encode("utf8"))
 	req = http.client.HTTPSConnection(url)
 	headers = { 'Content-Type': "application/json; charset=utf-8",	"User-Agent":USER_AGENT,	"Authorization": signature}
