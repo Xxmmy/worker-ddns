@@ -2,7 +2,7 @@
  * This handled a request to update a given DNS record.
  * The request should have the following format:
  *
- * { "addr": "<ipv4_addr>", "timestamp": <unix_timestamp> }
+ * { "timestamp": <unix_timestamp> }
  *
  * The request must be made by the machine that the record will be pointed to
  * and contain the HMAC (of the request body) in the "Authorization" header
@@ -20,6 +20,7 @@ async function handleRequest(request) {
     let valid_request = await is_valid(request);
     if (valid_request) {
       const addr = request.headers.get("cf-connecting-ip");
+      console.log("Update source ip " + addr);
       await updateRecord(addr);
       return new Response("OK", { status: 200 });
     }
@@ -43,7 +44,7 @@ async function is_valid(request) {
 
   const sourceAddr = request.headers.get("cf-connecting-ip");
   const signature = request.headers.get("authorization");
-  if (!signature || !bodyContent.addr || sourceAddr != bodyContent.addr) {
+  if (!signature || !bodyContent.timestamp) {
     return false;
   }
 
