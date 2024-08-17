@@ -21,10 +21,10 @@ async function handleRequest(request) {
     if (valid_request) {
       const addr = request.headers.get("cf-connecting-ip");
       await updateRecord(addr);
-      return new Response("Não há gente como a gente", { status: 200 });
+      return new Response("OK", { status: 200 });
     }
   }
-  return new Response("Por cima", { status: 401 });
+  return new Response("ERROR", { status: 401 });
 }
 
 /**
